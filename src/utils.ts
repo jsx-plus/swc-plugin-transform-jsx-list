@@ -3,8 +3,8 @@ import {
   CallExpression,
   Expression, Identifier, ImportDeclaration,
   JSXElement,
-  JSXExpressionContainer, JSXText,
-  NullLiteral
+  JSXExpressionContainer, JSXText, MemberExpression,
+  NullLiteral, ThisExpression
 } from '@swc/core';
 import {
   Argument,
@@ -105,6 +105,14 @@ export function buildNamedImportSpecifier(local: Identifier, imported: Identifie
   });
 }
 
+export function buildMemberExpression(object: Identifier, property: Identifier): MemberExpression {
+  return buildBaseExpression<MemberExpression>({
+    type: 'MemberExpression',
+    object: object,
+    property: property
+  })
+}
+
 export function buildCallExpression(callee: Expression | Super | Import, args: Argument[]): CallExpression {
   return buildBaseExpression({
     type: 'CallExpression',
@@ -113,7 +121,13 @@ export function buildCallExpression(callee: Expression | Super | Import, args: A
   })
 }
 
-export function buildIdentifier(name: string, optional: boolean): Identifier {
+export function buildThisExpression(): ThisExpression {
+  return buildBaseExpression({
+    type: 'ThisExpression'
+  });
+}
+
+export function buildIdentifier(name: string, optional?: boolean): Identifier {
   return buildBaseExpression({
     type: 'Identifier',
     value: name,
